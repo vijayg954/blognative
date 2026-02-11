@@ -20,9 +20,14 @@ export const createOneLiner = async (req, res) => {
 // Get by type
 export const getOneLiners = async (req, res) => {
   try {
-    const { type } = req.query;
+    const { type, topic } = req.query;
 
-    const data = await OneLiner.find({ type }).sort({ createdAt: -1 });
+    const filter = {};
+
+    if (type) filter.type = type;
+    if (topic) filter.topic = topic;
+
+    const data = await OneLiner.find(filter).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -36,9 +41,20 @@ export const getOneLiners = async (req, res) => {
   }
 };
 
+
+
 export const getTopics = async (req, res) => {
   try {
-    const topics = await OneLiner.distinct("type"); // ✅ MUST MATCH FIELD NAME
+    const { type } = req.query;
+
+    if (!type) {
+      return res.status(400).json({
+        success: false,
+        message: "Type is required",
+      });
+    }
+
+    const topics = await OneLiner.distinct("topic", { type });
 
     res.status(200).json({
       success: true,
