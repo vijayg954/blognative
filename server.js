@@ -1,23 +1,28 @@
 import express from "express";
 import cors from "cors";
-import DbConnect from "./config/Db.js";
 import dotenv from "dotenv";
-import blogRoutes from "./routes/blogRoutes.js";
+import DbConnect from "./config/Db.js";
+
+import oneLinerRoutes from "./routes/oneLinerRoutes.js";
+import quizRoutes from "./routes/quizRoutes.js";
 
 import dns from "node:dns/promises";
 dns.setServers(["1.1.1.1"]);
 
-const app = express();
 dotenv.config();
+DbConnect();
 
+const app = express();
 const PORT = process.env.PORT || 3001;
+
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
-DbConnect();
 
-app.use("/api/v1", blogRoutes);
+// Routes
+app.use("/api/v1/oneliner", oneLinerRoutes);
+app.use("/api/v1/quiz", quizRoutes);
 
 app.listen(PORT, () => {
-  console.log(`app is listening on ${PORT}`);
+  console.log(`App is listening on ${PORT}`);
 });
