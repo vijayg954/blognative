@@ -1,12 +1,13 @@
-import express from "express";
 import {
   createOneLiner,
   getOneLiners,
+  getTopics,
 } from "../controllers/oneLinerController.js";
 
-const router = express.Router();
-
 router.post("/new", createOneLiner);
-router.get("/", getOneLiners);
 
-export default router;
+// 🆕 get topics
+router.get("/topics", getTopics);
+
+// get questions by type + topic
+router.get("/", getOneLiners);

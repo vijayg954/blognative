@@ -20,13 +20,34 @@ export const createOneLiner = async (req, res) => {
 // Get by type
 export const getOneLiners = async (req, res) => {
   try {
-    const { type } = req.query;
+    const { type, topic } = req.query;
 
-    const data = await OneLiner.find({ type }).sort({ createdAt: -1 });
+    const data = await OneLiner.find({ type, topic }).sort({
+      createdAt: -1,
+    });
 
     res.status(200).json({
       success: true,
       data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Get Topics by type
+export const getTopics = async (req, res) => {
+  try {
+    const { type } = req.query;
+
+    const topics = await OneLiner.distinct("topic", { type });
+
+    res.status(200).json({
+      success: true,
+      topics,
     });
   } catch (error) {
     res.status(500).json({
